@@ -1,6 +1,3 @@
-//Made by Person 4, Rohan Masaun
-
-//imports scanner
 import java.util.Scanner;
 // Bugtested by Person 5
 /* Fixed by Person 5: class was named promptUser (lowercase). Class names should be capitalized,

@@ -1,9 +1,3 @@
-/*
- Person 2:
- Find tags like <noun> or <plural noun> in a Mad Lib story and return
- the part of speech written inside them
- Only uses indexOf, substring, and length from the Quick Reference
- */
 public class TagParser
 {
     /*

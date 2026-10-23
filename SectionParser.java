@@ -1,5 +1,3 @@
-// Fixed by Person 5: class was named MadLib, which is the name of Person 1s main class.
-// Two classes with the same name would clash, so it was renamed to SectionParser (file: SectionParser.java).
 public class SectionParser {
     /**
       Extracts and returns the substring from the current starting position up to (but not including) the opening tag index ('<').
