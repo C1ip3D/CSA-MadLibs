@@ -1,43 +1,32 @@
-# Project 1.2.10 Mad Libs: Team Work Split 
+# Project 1.2.10 Mad Libs
 
-## Project requirements 
-- [ ] Class header matches the file name (`public class MadLib`)
-- [ ] `main` method
-- [ ] camelCase where appropriate
-- [ ] Comments describing the algorithms
-- [ ] A variable containing the incomplete Mad Lib
-- [ ] Only String methods from the AP CSA Java Quick Reference (`length`, `substring(int,int)`, `substring(int)`, `indexOf(String)`, `equals`, `compareTo`)
-- [ ] Algorithm(s) that process user input
-- [ ] Algorithm(s) to parse for the parts of speech to replace
-- [ ] Algorithm(s) to parse for sections of the Mad Lib to include
-- [ ] Various prompts to keep the user on track
-- [ ] A final print statement showing the completed story
+## What it does
+The program fills in Mad Lib stories with words the user types. It runs three stories in one run. For each one it prints the original story with its blanks, asks for a word for each blank, then prints the completed story.
 
+## Approach
+We split the program into small methods so each person could build and test one piece on their own fork. The PM reviewed every pull request before merging it, and Person 1 wired the pieces together.
 
-1. Everyone makes their own file on their own personal fork for their specific tasks
-2. PM will merge all pull requests into the main repo
-3. Person 1 will fork the merged main repo and combine all the individual pieces into a workable program.
+`buildStory` walks through the story one tag at a time:
+1. `findTagStart` finds the next `<`, and `findTagEnd` finds the `>` that closes it.
+2. `getSection` adds the plain story text between the last tag and this one.
+3. `getPartOfSpeech` reads the word type inside the brackets, such as `noun` or `plural noun`.
+4. `promptUser` asks the user for a word of that type and returns their answer, which gets added to the story.
+5. The search starts again just after the `>`. When there are no tags left, `getRemainder` adds the rest of the story.
 
+`main` creates one `Scanner`, stores the three incomplete Mad Libs in variables, and sends each through `buildStory`.
 
-## Shared rules
-- **Workflow:** each person forks the repo and works in their own file (each person picks their own file name; Person 1 works in `MadLib.java`). Each file has a class named after the file and a small test `main` for that person's methods. When done, each person opens a pull request into the main repo, and the PM reviews it before it is merged.
-- **Connector:** Person 1 is the connector. After the merges, Person 1 copies each person's methods **unchanged** into `MadLib.java` as methods of `public class MadLib`, and wires them together in `main`. This is why the method names and signatures below must not change.
-- **Final submission is one file:** `MadLib.java` only. The per-person dev files are deleted before submitting, so there are no extra classes. The class header must match the file name.
-- **Tag format:** tags use spaces, like `<plural noun>` (not `<plural_noun>`), so no underscore parsing is needed for prompts.
-- **One Scanner:** `main` creates a single `Scanner` and passes it to `promptUser`. Never create a new `Scanner` inside a method.
-- **Method signatures:**
+| Method | Owner | What it does |
+|---|---|---|
+| `findTagStart(story, from)` | Person 2 | Index of the next `<` at or after `from`, or -1 if none are left |
+| `findTagEnd(story, from)` | Person 2 | Index of the next `>` at or after `from`, or -1 |
+| `getPartOfSpeech(story, start, end)` | Person 2 | Text between `<` and `>`, so multi-word tags like `<plural noun>` work |
+| `getSection(story, from, tagStart)` | Person 3 | Story text from `from` up to the next tag |
+| `getRemainder(story, from)` | Person 3 | Story text after the last tag |
+| `promptUser(in, partOfSpeech)` | Person 4 | Prints a prompt ("Enter a noun:" / "Enter an adjective:") and returns the user's word |
+| `buildStory(in, story)` | Person 1 | Loops over every tag and returns the completed story |
+| `main` | Person 1 | Creates the Scanner and runs all three stories |
 
-```java
-public static int findTagStart(String story, int from)                 // P2: index of next '<' at or after from, or -1
-public static int findTagEnd(String story, int from)                   // P2: index of next '>' at or after from, or -1
-public static String getPartOfSpeech(String story, int start, int end) // P2: text between '<' (at start) and '>' (at end)
-public static String getSection(String story, int from, int tagStart)  // P3: story text from 'from' up to tagStart
-public static String getRemainder(String story, int from)              // P3: story text from 'from' to the end
-public static String promptUser(Scanner in, String partOfSpeech)       // P4: prompts and returns the user's answer
-```
-
-Main loop (Person 1 writes it, Persons 2 to 4 supply the pieces):
-find next `<`, then add the plain text before it (P3), read the part of speech inside `<...>` (P2), prompt the user (P4), append the answer, repeat from after `>`. When no tags remain, append the remainder (P3) and print (P1).
+All parsing uses only String methods from the AP CSA Java Quick Reference (`indexOf`, `substring`, `length`, `equals`). `promptUser` picks "a" or "an" by checking whether the first letter of the part of speech is in `"aeiouAEIOU"`.
 
 ## Assignments
 
@@ -45,13 +34,14 @@ find next `<`, then add the plain text before it (P3), read the part of speech i
 - Review every person's code before it is merged: correct logic, camelCase, comments describing the algorithm, and in collaboration with Person 5
 - Notify if any fixes are required.
 - End to end testing.
+- Own the **milestones**: create the milestone list (GitHub Project board or a table in the repo README) with estimated vs. actual time for each person's piece, and keep it updated.
 
 ### Person 1: Lead Developer / Program Structure
-- Create `MadLib.java` with the class header and `main` (requirements: class header, main, camelCase).
-- Declare the variable holding the incomplete Mad Lib. Write the two sample stories from the handout and one original three-blank story (for the elbow-partner swap).
+- Create `LastName_MadLibs.java` with the class header and `main` (requirements: class header, main, camelCase).
+- Declare the variable holding the incomplete Mad Lib. Store the three test Mad Libs (see "Test runs" below), and write the third one (original, at least 7 blanks, nouns, verbs and adjectives).
 - Create the single `Scanner` in `main` and pass it to `promptUser`.
-- Write the main loop in `main` that calls everyone's methods and builds the completed story. Until the others merge, code against stub methods with the agreed signatures.
-- Be the connector: copy each person's merged methods into `MadLib.java`, fix any name or signature mismatches with the owner, and delete the per-person dev files before submitting.
+- Write `buildStory` (the story generation function): the main loop that calls everyone's methods and returns the completed story, with no limit on the number of tags. `main` calls it for each story. Until the others merge, code against stub methods with the agreed signatures.
+- Be the connector: copy each person's merged methods into `LastName_MadLibs.java`, fix any name or signature mismatches with the owner, and delete the per-person dev files before submitting.
 - `main` runs all three stories in one run (one after another, same Scanner), so a single screenshot shows all three tests.
 - For each story, write an intro message, print the original incomplete story first, then the prompts, then the final print statement with the completed story.
 - Done when: the program compiles and prints a full story using the stubbed methods.
@@ -83,8 +73,58 @@ find next `<`, then add the plain text before it (P3), read the part of speech i
 - Penalty checks: no compile errors or warnings, no leftover debug prints, no extra classes, and the class header matches the file name.
 - Make sure the screenshot shows the original story and its solution for all three stories.
 - Make sure the code has a header comment stating the program's purpose and how it meets the requirements, and that every algorithm is commented.
-- Take the quality **screenshots** (not from a phone) showing the original Mad Lib and its solution.
 - Document the test cases: for each of the three Mad Libs, write down the inputs entered and the output produced.
-- Test the swap: run another team's Mad Lib through the program.
 - Tell the PM which tests pass and fail so the PM can verify.
 - Make the slide deck and the presentation plan: summarize what each part of the program does, the most challenging parts, and who presents which part.
+
+## Milestones
+From our [milestone tracker](MadLibs%20Milestone%20Tracker.xlsx):
+
+| # | Milestone | Owner | Done when | Status |
+|---|---|---|---|---|
+| M1 | Repo set up, everyone forked | PM | All 5 forks exist, signatures posted in README | Done |
+| M2 | Program skeleton + stubs | P1 | MadLibs.java compiles and prints a full story using stub methods | Done |
+| M3a | Tag parsing (findTagStart, findTagEnd, getPartOfSpeech) | P2 | Sample stories return noun, plural noun, number in order; -1 when no tags | Done |
+| M3b | Section parsing (getSection, getRemainder) | P3 | Text + answers stitch back to the exact original format | Done |
+| M3c | Prompts (promptUser) | P4 | Distinct prompt per part of speech, "a"/"an" correct | Done |
+| M3d | Original Mad Lib written | P1 | 7+ blanks, uses nouns/verbs/adjectives | Done |
+| M4 | All PRs reviewed and merged | PM | P2–P4 PRs pass review (logic, camelCase, requirement comments) | Done |
+| M5 | Integration | P1 | Methods copied unchanged, main runs all 3 stories in one run, dev files deleted | Done |
+| M6 | Testing + bug fixes | P5 + owners | All 3 tests + another team's swap pass; bug list empty | Done |
+| M7 | End-to-end check + requirements audit | PM + P5 | Every requirement checked off; no warnings or debug prints | Done |
+| M8 | Screenshots + submission README | P5 | Screenshots show original and completed story for all 3 | Done |
+| M9 | Slides + presentation plan | P5 + all | Deck done, each person knows their part | Done |
+| M10 | Submitted | PM | Repo link turned in | Not started |
+
+## Test runs
+All three stories ran one after another in a single run, using the same Scanner.
+
+### Test 1: The Pond
+`The <noun> <verb> across the <adjective> pond`
+
+![Test 1: The Pond](screenshots/test1.png)
+
+### Test 2: The Zoo
+`I went to the zoo to see a <noun>. There were people <verb> around the enclosure which made the <adjective> apes go bananas.`
+
+![Test 2: The Zoo](screenshots/test2.png)
+
+### Test 3: Our Original Mad Lib (9 blanks)
+`On a <adjective> Saturday, my <noun> and I decided to <verb> to the <noun>. We brought <number> <plural noun> and a very <adjective> sandwich. By noon we were <verb> so hard that a <noun> asked us to leave.`
+
+![Test 3: Our Original Mad Lib](screenshots/test3.png)
+
+## Requirements
+- [x] `main` method
+- [x] camelCase names
+- [x] Comments describing the algorithms, with `// Requirement:` comments marking where each requirement is met
+- [x] Variables containing the incomplete Mad Libs (`story1`, `story2`, `story3` in `main`)
+- [x] Only String methods from the AP CSA Java Quick Reference
+- [x] Algorithm that processes user input (`promptUser`)
+- [x] Algorithm to parse for the parts of speech to replace (`findTagStart`, `findTagEnd`, `getPartOfSpeech`)
+- [x] Algorithm to parse for sections of the Mad Lib to include (`getSection`, `getRemainder`)
+- [x] Various prompts to keep the user on track ("Enter a noun:", "Enter an adjective:", "Enter a plural noun:", ...)
+- [x] Final print statement showing the completed story
+- [x] Handles nouns, verbs, adjectives, numbers and plural nouns, with up to 9 substitutions in one story
+- [x] Input collection function (`promptUser`) and story generation function (`buildStory`)
+- [x] Tested with the two teacher Mad Libs plus an original one
